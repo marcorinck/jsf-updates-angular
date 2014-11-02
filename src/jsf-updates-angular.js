@@ -1,4 +1,7 @@
+/* global jsf: true, angular: true */
 (function (window, angular, jsf, document) {
+	"use strict";
+
 	var onCompleteCallbacks = [];
 
 	function escapeJSFClientId() {
@@ -19,7 +22,7 @@
 			if (data.status === 'begin') {
 				onCompleteCallbacks.push(callback);
 			}
-		}
+		};
 	}
 
 
