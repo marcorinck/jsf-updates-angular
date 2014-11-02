@@ -5,8 +5,9 @@
  */
 (function (window, angular, jsf, document) {
   'use strict';
-  var onCompleteCallbacks = [];
-  function escapeJSFClientId() {
+  var onCompleteCallbacks = [], requestOngoing = false;
+  function escapeJSFClientId(id) {
+    return '#' + id.replace(/:/g, '\\:');
   }
   function onCompleteEvent(callback) {
     return function (data) {
@@ -17,6 +18,13 @@
   }
   function onComplete(callback) {
     onCompleteCallbacks.push(callback);
+  }
+  function ensureExecutionAfterAjaxRequest(callback) {
+    if (!requestOngoing) {
+      callback();
+    } else {
+      onCompleteCallbacks.push(callback);
+    }
   }
   function destroyScopes(data) {
     var updates = data.responseXML.getElementsByTagName('update');
@@ -65,6 +73,7 @@
     if (jsf) {
       jsf.ajax.addOnEvent(function (data) {
         if (data.status === 'begin') {
+          requestOngoing = true;
           onCompleteCallbacks = [];
         }
         if (data.status === 'complete') {
@@ -72,21 +81,17 @@
         }
         if (data.status === 'success') {
           handleAjaxUpdates(data);
+          requestOngoing = false;
         }
       });
     }
   });
-  var jua = {
-      onComplete: onComplete,
-      onCompleteEvent: onCompleteEvent
-    };
-  if (typeof window.module !== 'undefined' && window.module.exports) {
-    window.module.exports = jua;
-  } else if (typeof window.define === 'function' && window.define.amd) {
-    window.define('jua', function () {
-      return jua;
-    });
-  } else {
-    window.jua = jua;
-  }
+  window.jua = {
+    onComplete: onComplete,
+    onCompleteEvent: onCompleteEvent,
+    ensureExecutionAfterAjaxRequest: ensureExecutionAfterAjaxRequest,
+    get requestOngoing() {
+      return requestOngoing;
+    }
+  };
 }(window, angular, jsf, document));
