@@ -75,19 +75,6 @@ module.exports = function (grunt) {
 				dest: '<%= build_dir %>/jsf-updates-angular.js'
 			}
 		},
-
-		cssmin: {
-			core: {
-				files: {
-					'build/jsf-updates-angular.min.css': '<%= lib_files.css %>'
-				},
-				options: {
-					'banner': '<%= meta.banner %>',
-					'report': 'gzip'
-				}
-			}
-		},
-
 		uglify: {
 			core: {
 				files: {
@@ -147,8 +134,7 @@ module.exports = function (grunt) {
 		'concat:core',
 		'ngmin:core',
 		'concat:banner',
-		'uglify:core',
-		'cssmin:core'
+		'uglify:core'
 	]);
 
 	// For development purpose.
