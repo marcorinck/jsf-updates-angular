@@ -12,7 +12,7 @@ An introduction can be found here:
 ##Requirements
 
 * ES5 browser (all modern browsers and IE9+).
-* JSF 2.x 
+* JSF 2.x (tested with Mojarra JSF 2.1.7)
 * angularJS (tested with 1.3, older versions should work too)
 
 ##Installation
