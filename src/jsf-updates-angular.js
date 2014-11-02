@@ -2,10 +2,11 @@
 (function (window, angular, jsf, document) {
 	"use strict";
 
-	var onCompleteCallbacks = [];
+	var onCompleteCallbacks = [],
+		requestOngoing = false;
 
-	function escapeJSFClientId() {
-
+	function escapeJSFClientId(id) {
+		return "#" + id.replace(/:/g, "\\:");
 	}
 
 	/**
@@ -25,7 +26,6 @@
 		};
 	}
 
-
 	/**
 	 * Adds the given callback to be executed after the next (or currently ongoing) JSF ajax request is successfully
 	 * completed.
@@ -35,6 +35,20 @@
 	 */
 	function onComplete(callback) {
 		onCompleteCallbacks.push(callback);
+	}
+
+	/**
+	 * Executes the given callback immediately when no JSF AJAX request is currently running or executes after JSF AJAX request
+	 * is successfully completed.
+	 *
+	 * @param callback
+	 */
+	function ensureExecutionAfterAjaxRequest(callback) {
+		if (!requestOngoing) {
+			callback();
+		} else {
+			onCompleteCallbacks.push(callback);
+		}
 	}
 
 	function destroyScopes(data) {
@@ -97,6 +111,7 @@
 		if (jsf) {
 			jsf.ajax.addOnEvent(function (data) {
 				if (data.status === 'begin') {
+					requestOngoing = true;
 					onCompleteCallbacks = [];
 				}
 
@@ -106,24 +121,19 @@
 
 				if (data.status === 'success') {
 					handleAjaxUpdates(data);
+					requestOngoing = false;
 				}
 			});
 		}
 
 	});
 
-	var jua = {
+	window.jua = {
 		onComplete: onComplete,
-		onCompleteEvent: onCompleteEvent
+		onCompleteEvent: onCompleteEvent,
+		ensureExecutionAfterAjaxRequest: ensureExecutionAfterAjaxRequest,
+		get requestOngoing() {
+			return requestOngoing;
+		}
 	};
-
-	if (typeof window.module !== 'undefined' && window.module.exports) {//commonJS
-		window.module.exports = jua;
-	} else if (typeof window.define === 'function' && window.define.amd) {//amd
-		window.define("jua", function () {
-			return jua;
-		});
-	} else {
-		window.jua = jua;
-	}
 })(window, angular, jsf, document);
