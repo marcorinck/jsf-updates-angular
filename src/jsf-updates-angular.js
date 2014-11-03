@@ -20,7 +20,7 @@
 	 */
 	function onCompleteEvent(callback) {
 		return function (data) {
-			if (data.status === 'begin') {
+			if (data.status === 'complete') {
 				onCompleteCallbacks.push(callback);
 			}
 		};
