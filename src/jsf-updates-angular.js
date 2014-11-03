@@ -84,9 +84,9 @@
 						if (window.jua.debug) {
 							console.log("compiling angular element", element);
 						}
-					}
 
-					$compile(element)(element.scope());
+						$compile(element)(element.scope());
+					}
 				}
 			});
 
