@@ -1,5 +1,5 @@
-/* global jsf: true, angular: true */
-(function (window, angular, jsf, document) {
+/* global jsf: true, angular: true, jQuery: true */
+(function (window, angular, jsf, document, $) {
 	"use strict";
 
 	var onCompleteCallbacks = [],
@@ -52,80 +52,65 @@
 	}
 
 	function destroyScopes(data) {
-		var updates = data.responseXML.getElementsByTagName("update");
+		var updates = data.responseXML.getElementsByTagName('update');
 
-		if (updates) {
-			updates.forEach(function(updateId) {
-				var id = escapeJSFClientId(updateId), element, scopedElements;
+		$.each(updates, function(index, update) {
+			var id = escapeJSFClientId(update.id);
 
-				if (!id.contains("ViewState")) {
-					element = document.getElementById(id);
-					scopedElements = element.querySelectorAll('.ng-scope, .ng-isolated-scope');
+			if (!id.contains("ViewState")) {
+				$(id).find(".ng-scope, .ng-isolate-scope").each(function(index, scopedChildElement) {
+					if (window.jua.debug) {
+						console.log("destroying child scope for element", scopedChildElement);
+					}
 
-					scopedElements.forEach(function (scopedChildElement) {
-						if (window.jua.debug) {
-							console.log("destroying child scope for element", scopedChildElement);
-						}
-
-						angular.element(scopedChildElement.firstChild).scope().$destroy();
-					});
-				}
-			});
-		}
+					angular.element(scopedChildElement.firstChild).scope().$destroy();
+				});
+			}
+		});
 	}
 
 	function handleAjaxUpdates(data) {
 		window.setTimeout(function () {
 			var $compile = angular.element(document).injector().get('$compile'),
-				updates = data.responseXML.getElementsByTagName("update");
+				updates = data.responseXML.getElementsByTagName('update');
 
-			if (updates) {
-				updates.forEach(function(updateId) {
-					var id = escapeJSFClientId(updateId), element;
+			$.each(updates, function(index, update) {
+				var id = escapeJSFClientId(update.id), element;
 
-					if (!id.contains("ViewState")) {
-						element = angular.element(document.getElementById(id));
+				if (!id.contains("ViewState")) {
+					element = angular.element($(id));
 
-						if (element) {
-							if (window.jua.debug) {
-								console.log("compiling angular element", element);
-							}
-
-							$compile(element)(element.scope());
+					if (element) {
+						if (window.jua.debug) {
+							console.log("compiling angular element", element);
 						}
 					}
-				});
-			}
+
+					$compile(element)(element.scope());
+				}
+			});
 
 			if (onCompleteCallbacks.length) {
-				onCompleteCallbacks.forEach(function(onCompleteCallback) {
+				onCompleteCallbacks.forEach(function (onCompleteCallback) {
 					onCompleteCallback();
 				});
-
 				onCompleteCallbacks = [];
 			}
 		});
 	}
 
-	window.addEventListener("load", function () {
-		if (jsf) {
-			jsf.ajax.addOnEvent(function (data) {
-				if (data.status === 'begin') {
-					requestOngoing = true;
-					onCompleteCallbacks = [];
-				}
-
-				if (data.status === 'complete') {
-					destroyScopes(data);
-				}
-
-				if (data.status === 'success') {
-					handleAjaxUpdates(data);
-					requestOngoing = false;
-				}
-			});
+	jsf.ajax.addOnEvent(function (data) {
+		if (data.status === 'begin') {
+			requestOngoing = true;
+			onCompleteCallbacks = [];
 		}
-
+		if (data.status === 'complete') {
+			destroyScopes(data);
+		}
+		if (data.status === 'success') {
+			handleAjaxUpdates(data);
+			requestOngoing = false;
+		}
 	});
 
 	window.jua = {
@@ -136,4 +121,4 @@
 			return requestOngoing;
 		}
 	};
-})(window, angular, jsf, document);
+})(window, angular, jsf, document, jQuery);
