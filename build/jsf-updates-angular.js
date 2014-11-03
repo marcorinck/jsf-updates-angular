@@ -11,7 +11,7 @@
   }
   function onCompleteEvent(callback) {
     return function (data) {
-      if (data.status === 'begin') {
+      if (data.status === 'complete') {
         onCompleteCallbacks.push(callback);
       }
     };
@@ -51,8 +51,8 @@
             if (window.jua.debug) {
               console.log('compiling angular element', element);
             }
+            $compile(element)(element.scope());
           }
-          $compile(element)(element.scope());
         }
       });
       if (onCompleteCallbacks.length) {
