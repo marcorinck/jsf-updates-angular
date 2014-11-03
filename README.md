@@ -6,7 +6,7 @@ This small library updates angularJS state after a JSF AJAX request is complete.
 in a JSF page now without worrying that JSF AJAX requests updates elements with new angularJS directives that are 
 not picked up by angularjS because DOM changes were happening outside of angularJS digest phase.
 
-An introduction can be found here: 
+An introduction can be found here: http://entwicklertagebuch.com/blog/2014/11/jsf-updates-angular-how-to-use-angularjs-directives-to-replace-jsf-components/
 
 
 ##Requirements
