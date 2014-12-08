@@ -1,36 +1,39 @@
 {
-	"name": "jua",
-	"homepage": "https://github.com/marcorinck/jsf-updates-angular",
-	"version": "0.0.1",
-	"author": "Marco Rinck <marco.rinck@googlemail.com>",
-	"description": "jsf-updates-angular: Update angularJS after a JSF AJAX request completes",
-	"bugs": {
-		"url": "http://github.com/marcorinck/jsf-updates-angular/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "http://github.com/marcorinck/jsf-updates-angular"
-	},
-	"devDependencies": {
-		"karma": "~0.12.x",
-		"grunt": "~0.4.1",
-		"grunt-contrib-clean": "~0.5.0",
-		"grunt-contrib-copy": "~0.4.1",
-		"grunt-contrib-concat": "~0.3.x",
-		"grunt-contrib-jshint": "~0.6.x",
-		"grunt-contrib-uglify": "~0.2.x",
-		"grunt-contrib-watch": "~0.5.x",
-		"grunt-bump": "0.0.2",
-		"grunt-karma": "~0.7.x",
-		"grunt-ngmin": "0.0.2",
-		"grunt-push-release": "0.1.x",
-		"matchdep": "0.1.2",
-		"grunt-contrib-cssmin": "~0.6.2"
-	},
-	"engines": {
-		"node": "0.10.x"
-	},
-	"folders": {
-		"build": "target/"
-	}
+  "name": "jua",
+  "homepage": "https://github.com/marcorinck/jsf-updates-angular",
+  "version": "0.0.1",
+  "author": "Marco Rinck <marco.rinck@googlemail.com>",
+  "description": "jsf-updates-angular: Update angularJS after a JSF AJAX request completes",
+  "bugs": {
+    "url": "http://github.com/marcorinck/jsf-updates-angular/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/marcorinck/jsf-updates-angular"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-bump": "0.0.2",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-concat": "~0.3.x",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.6.2",
+    "grunt-contrib-jshint": "~0.6.x",
+    "grunt-contrib-uglify": "~0.2.x",
+    "grunt-contrib-watch": "~0.5.x",
+    "grunt-karma": "~0.7.x",
+    "grunt-ngmin": "0.0.2",
+    "grunt-push-release": "0.1.x",
+    "jasmine-core": "^2.1.3",
+    "karma": "~0.12.x",
+    "karma-jasmine": "^0.3.2",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "matchdep": "0.1.2"
+  },
+  "engines": {
+    "node": "0.10.x"
+  },
+  "folders": {
+    "build": "target/"
+  }
 }
