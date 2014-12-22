@@ -1,9 +1,11 @@
-/* global jsf: true, angular: true, jQuery: true */
-(function (window, angular, jsf, document, $) {
+(function (window) {
 	"use strict";
 
 	var onCompleteCallbacks = [],
-		requestOngoing = false;
+		requestOngoing = false,
+		document = window.document,
+		jsf = window.jsf,
+		$ = window.jQuery;
 
 	function escapeJSFClientId(id) {
 		return "#" + id.replace(/:/g, "\\:");
@@ -99,26 +101,54 @@
 		});
 	}
 
-	jsf.ajax.addOnEvent(function (data) {
-		if (data.status === 'begin') {
+	if (jsf) {
+		jsf.ajax.addOnEvent(function (data) {
+			if (data.status === 'begin') {
+				requestOngoing = true;
+				onCompleteCallbacks = [];
+			}
+			if (data.status === 'complete') {
+				destroyScopes(data);
+			}
+			if (data.status === 'success') {
+				handleAjaxUpdates(data);
+				requestOngoing = false;
+			}
+		});
+	}
+
+	//This should handle ajax requests of non-standard jsf libraries too when they are using jquery internally (e.g. PrimeFaces)
+	if ($) {
+		$(document).ajaxStart(function() {
 			requestOngoing = true;
 			onCompleteCallbacks = [];
-		}
-		if (data.status === 'complete') {
-			destroyScopes(data);
-		}
-		if (data.status === 'success') {
-			handleAjaxUpdates(data);
-			requestOngoing = false;
-		}
-	});
+		});
 
-	window.jua = {
-		onComplete: onComplete,
-		onCompleteEvent: onCompleteEvent,
-		ensureExecutionAfterAjaxRequest: ensureExecutionAfterAjaxRequest,
-		get requestOngoing() {
-			return requestOngoing;
-		}
-	};
-})(window, angular, jsf, document, jQuery);
+		$(document).ajaxComplete(function(event, xhr) {
+			if (xhr && xhr.responseXML) {
+				destroyScopes(xhr);
+			}
+		});
+
+		$(document).ajaxSuccess(function(event, xhr) {
+			if (xhr && xhr.responseXML) {
+				handleAjaxUpdates(xhr);
+			}
+
+			requestOngoing = false;
+		});
+	}
+
+	if (!$ && !jsf && console) {
+		console.warn('jsf-updates-angular: no jquery and no jsf object found, so doing nothing after ajax requests. This is probably not what you want!');
+	} else {
+		window.jua = {
+			onComplete: onComplete,
+			onCompleteEvent: onCompleteEvent,
+			ensureExecutionAfterAjaxRequest: ensureExecutionAfterAjaxRequest,
+			get requestOngoing() {
+				return requestOngoing;
+			}
+		};
+	}
+})(window);
