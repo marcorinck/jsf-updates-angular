@@ -57,7 +57,7 @@
 		$.each(updates, function(index, update) {
 			var id = escapeJSFClientId(update.id);
 
-			if (!id.contains("ViewState")) {
+			if (id.indexOf("ViewState") !== -1) {
 				$(id).find(".ng-scope, .ng-isolate-scope").each(function(index, scopedChildElement) {
 					if (window.jua.debug) {
 						console.log("destroying child scope for element", scopedChildElement);
@@ -77,7 +77,7 @@
 			$.each(updates, function(index, update) {
 				var id = escapeJSFClientId(update.id), element;
 
-				if (!id.contains("ViewState")) {
+				if (id.indexOf("ViewState") !== -1) {
 					element = angular.element($(id));
 
 					if (element) {
