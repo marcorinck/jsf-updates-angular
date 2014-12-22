@@ -2,7 +2,7 @@
 	"author": "Marco Rinck",
 	"name": "jua",
 	"description": "jsf-updates-angular: Update angularJS after a JSF AJAX request completes",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"homepage": "https://github.com/marcorinck/jsf-updates-angular",
 	"repository": {
 		"type": "git",

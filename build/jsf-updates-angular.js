@@ -1,5 +1,5 @@
 /**
- * jua - v0.1.0 - 2014-11-03
+ * jua - v0.1.0 - 2014-12-22
  * https://github.com/marcorinck/jsf-updates-angular
  * Copyright (c) 2014 Marco Rinck; Licensed MIT
  */
@@ -30,7 +30,7 @@
     var updates = data.responseXML.getElementsByTagName('update');
     $.each(updates, function (index, update) {
       var id = escapeJSFClientId(update.id);
-      if (!id.contains('ViewState')) {
+      if (id.indexOf('ViewState') !== -1) {
         $(id).find('.ng-scope, .ng-isolate-scope').each(function (index, scopedChildElement) {
           if (window.jua.debug) {
             console.log('destroying child scope for element', scopedChildElement);
@@ -45,7 +45,7 @@
       var $compile = angular.element(document).injector().get('$compile'), updates = data.responseXML.getElementsByTagName('update');
       $.each(updates, function (index, update) {
         var id = escapeJSFClientId(update.id), element;
-        if (!id.contains('ViewState')) {
+        if (id.indexOf('ViewState') !== -1) {
           element = angular.element($(id));
           if (element) {
             if (window.jua.debug) {
